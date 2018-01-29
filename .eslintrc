@@ -1,0 +1,7 @@
+{
+  "extends": "standard",
+  "rules": {
+    "semi": [0],
+    "react/jsx-filename-extension": [0]
+  }
+}

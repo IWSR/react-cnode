@@ -1,0 +1,11 @@
+root = true
+
+[*]
+chartset = utf-8
+indent_style = space
+indent_size = 2
+end_of_line = lf
+# 默认给最后一行增加空行
+insert_final_newline = true
+# 删去句尾多余空格
+trim_trailing_whitespace = true
