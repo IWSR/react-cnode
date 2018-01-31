@@ -9,7 +9,7 @@ import React from 'react';
 // }
 export default function () {
   return (
-    <div>This is App123</div>
+    <div>This is App12</div>
   );
 }
 

@@ -7,7 +7,7 @@ const proxy = require('http-proxy-middleware');
 
 const serverConfig = require('../../build/webpack.config.server');
 
-const getTemplate = function (){
+const getTemplate = function () {
   return new Promise((resolve, reject) => {
     // 从内存中获取模板文件
     axios.get('http://localhost:8888/public/index.html')
@@ -43,7 +43,6 @@ serverCompiler.watch({}, (err, stats) => {
   // 给这个模块赋一个名
   m._compile(bundle, 'server-entry.js');
   serverBundle = m.exports.default;
-  console.log(m.exports.default);
 });
 
 module.exports = function (app) {
