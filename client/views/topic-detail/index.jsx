@@ -7,7 +7,7 @@ export default class TopicDetail extends React.Component {
 
   render() {
     return (
-      <div>This is topic list</div>
+      <div>This is detail list</div>
     );
   }
 }

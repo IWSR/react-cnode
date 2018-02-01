@@ -5,6 +5,10 @@ module.exports = {
     path: path.join(__dirname, '../dist'),
     publicPath: '/public/'
   },
+  // 这样可以忽略后缀名，webpack也能找到
+  resolve: {
+    extensions: ['.js', '.jsx']
+  },
   module: {
     rules: [
       {
