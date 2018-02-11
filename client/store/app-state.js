@@ -21,6 +21,7 @@ export default class AppState {
   @action changeName(name) {
     this.name = name;
   }
+
   toJson() {
     return {
       count: this.count,

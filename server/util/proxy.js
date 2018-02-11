@@ -18,6 +18,7 @@ module.exports = function (req, res, next) {
   const query = Object.assign({}, req.query, {
     accesstoken: (needAccessToken && req.method === 'GET') ? user.accessToken : ''
   });
+
   if (query.needAccessToken) {
     delete query.needAccessToken;
   }
