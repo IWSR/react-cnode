@@ -23,7 +23,24 @@ const getTemplate = function () {
   });
 }
 
-const Module = module.constructor;
+const NativeModule = require('module');
+const vm = require('vm');
+
+const getModuleFromString = (bundle, filename) => {
+  const m = {
+    exports: {}
+  };
+  // 使用原生的module模块包装了js文件的代码
+  const wrapper = NativeModule.wrap(bundle);
+  const script = new vm.Script(wrapper, {
+    filename: filename,
+    displayErrors: true
+  });
+  const result = script.runInThisContext();
+  result.call(m.exports, m.exports, require, m);
+  return m;
+}
+
 const mfs = new MemoryFs();
 const serverCompiler = webpack(serverConfig);
 serverCompiler.outputFileSystem = mfs;
@@ -41,10 +58,11 @@ serverCompiler.watch({}, (err, stats) => {
   );
   // 这里获取的是stream
   const bundle = mfs.readFileSync(bundlePath, 'utf-8');
-  const m = new Module();
+  // const m = new Module();
   // 把stream转换成可以使用的模块
   // 给这个模块赋一个名
-  m._compile(bundle, 'server-entry.js');
+  // m._compile(bundle, 'server-entry.js');
+  const m = getModuleFromString(bundle, 'server-entry.js');
   serverBundle = m.exports.default;
   createStoreMap = m.exports.createStoreMap;
 });
