@@ -11,9 +11,9 @@
     "dev:server": "nodemon server/server.js",
     "clear": "rimraf dist",
     "build": "npm run clear && npm run build:client && npm run build:server",
-    "start": "node server/server.js",
     "lint": "eslint --ext .js --ext .jsx client/",
-    "precommit": "npm run lint"
+    "precommit": "npm run lint",
+    "start": "cross-env NODE_ENV=production node server/server.js"
   },
   "author": "",
   "license": "ISC",
@@ -31,6 +31,7 @@
     "react": "^16.2.0",
     "react-async-bootstrapper": "^1.1.2",
     "react-dom": "^16.2.0",
+    "react-helmet": "^5.2.0",
     "react-router": "^4.2.0",
     "react-router-dom": "^4.2.2",
     "serialize-javascript": "^1.4.0",

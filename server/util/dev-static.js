@@ -2,11 +2,8 @@ const path = require('path');
 const axios = require('axios');
 const webpack = require('webpack');
 const MemoryFs = require('memory-fs');
-const ReactDomServer = require('react-dom/server');
 const proxy = require('http-proxy-middleware');
-const serialize = require('serialize-javascript');
-const ejs = require('ejs');
-const asyncBootstrap = require('react-async-bootstrapper').default;
+const serverRender = require('./server-render');
 
 const serverConfig = require('../../build/webpack.config.server');
 
@@ -44,7 +41,7 @@ const getModuleFromString = (bundle, filename) => {
 const mfs = new MemoryFs();
 const serverCompiler = webpack(serverConfig);
 serverCompiler.outputFileSystem = mfs;
-let serverBundle, createStoreMap;
+let serverBundle;
 
 serverCompiler.watch({}, (err, stats) => {
   if (err) throw err;
@@ -63,48 +60,20 @@ serverCompiler.watch({}, (err, stats) => {
   // 给这个模块赋一个名
   // m._compile(bundle, 'server-entry.js');
   const m = getModuleFromString(bundle, 'server-entry.js');
-  serverBundle = m.exports.default;
-  createStoreMap = m.exports.createStoreMap;
+  serverBundle = m.exports;
 });
-
-const getStoreState = (stores) => {
-  // https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Array/Reduce
-  return Object.keys(stores).reduce((result, storeName) => {
-    result[storeName] = stores[storeName].toJson();
-    return result;
-  }, {});
-}
 
 module.exports = function (app) {
   app.use('/public', proxy({
     target: 'http://localhost:8888'
   }));
 
-  app.get('*', (req, res) => {
+  app.get('*', (req, res, next) => {
+    if (!serverBundle) {
+      return res.send('waiting for compile, refresh later');
+    }
     getTemplate().then(template => {
-      const routerContext = {};
-      const stores = createStoreMap();
-      const app = serverBundle(stores, routerContext, req.url);
-      // asyncBootstrap
-      asyncBootstrap(app).then(() => {
-        // react-router会给routerContext增加属性
-        // 查看是否有重定向
-        if (routerContext.url) {
-          // 重定向
-          res.status(302).setHeader('Location', routerContext.url);
-          res.end();
-          return
-        }
-        const state = getStoreState(stores);
-        const content = ReactDomServer.renderToString(app);
-
-        const html = ejs.render(template, {
-          appString: content,
-          initialState: serialize(state)
-        });
-        // res.send(template.replace('<!-- app -->', content));
-        res.send(html);
-      });
-    });
+      return serverRender(serverBundle, template, req, res);
+    }).catch(next);
   })
 }
