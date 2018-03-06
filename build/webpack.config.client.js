@@ -25,6 +25,8 @@ const config = webpackMerge(baseConfig, {
 });
 
 if (isDev) {
+  // 在浏览器端调试未编译的代码
+  config.devtool = '#cheap-module-eval-source-map';
   config.entry = {
     app: [
       'react-hot-loader/patch',
@@ -36,7 +38,7 @@ if (isDev) {
     host: '0.0.0.0',
     port: '8888',
     // 在dist目录下启动了该服务
-    contentBase: path.join(__dirname, '../dist'),
+    // contentBase: path.join(__dirname, '../dist'),
     hot: true,
     // webpack错误信息显示在浏览器上
     overlay: {
