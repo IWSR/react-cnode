@@ -35,7 +35,7 @@ if (!isDev) {
   const serverEntry = require('../dist/server-entry');
   const template = fs.readFileSync(path.join(__dirname, '../dist/server.ejs'), 'utf8');
 
-  // 设置静态文件
+  // 设置静态文件目录
   app.use('/public', express.static(path.join(__dirname, '../dist')));
 
   app.get('*', (req, res, next) => {

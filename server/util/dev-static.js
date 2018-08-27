@@ -64,6 +64,8 @@ serverCompiler.watch({}, (err, stats) => {
 });
 
 module.exports = function (app) {
+  // client的服务（热更新）是建立在8888端口下，因此在硬盘中找不到相关文件
+  // 此时静态资源文件存在于内存中，访问/public（静态资源）需要代理到相关服务下
   app.use('/public', proxy({
     target: 'http://localhost:8888'
   }));

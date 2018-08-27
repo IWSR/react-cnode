@@ -1,3 +1,6 @@
+// 服务端内不存在document对象（浏览器环境）
+// 因此在服务端渲染时需要新建该文件作为服务端渲染的入口
+
 import React from 'react';
 import { StaticRouter } from 'react-router-dom';
 import { Provider, useStaticRendering } from 'mobx-react';

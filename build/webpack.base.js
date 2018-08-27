@@ -3,6 +3,7 @@ const path = require('path');
 module.exports = {
   output: {
     path: path.join(__dirname, '../dist'),
+    // 静态资源的引用路径
     publicPath: '/public/'
   },
   // 这样可以忽略后缀名，webpack也能找到
@@ -25,11 +26,13 @@ module.exports = {
         test: /.jsx$/,
         loader: 'babel-loader'
       },
+      // node_modules内的js文件不需要被再次编译
       {
         test: /.js$/,
         loader: 'babel-loader',
         exclude: [
-          path.join(__dirname, '../node_modules')]
+          path.join(__dirname, '../node_modules')
+        ]
       }
     ]
   }
