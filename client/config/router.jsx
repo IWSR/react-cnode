@@ -3,10 +3,26 @@ import {
   Route,
   Redirect,
 } from 'react-router-dom';
+import Loadable from 'react-loadable';
 
-import TopicList from '../views/topic-list/index.jsx';
-import TopicDetail from '../views/topic-detail/index.jsx';
-import TestApi from '../views/test/api-test';
+function Loading() {
+  return <div>loading</div>;
+}
+
+const TopicList = Loadable({
+  loader: () => import('../views/topic-list/index.jsx'),
+  loading: Loading,
+});
+
+const TopicDetail = Loadable({
+  loader: () => import('../views/topic-detail/index.jsx'),
+  loading: Loading,
+});
+
+const TestApi = Loadable({
+  loader: () => import('../views/test/api-test.jsx'),
+  loading: Loading,
+});
 
 export default () => [
   <Route path="/" render={() => <Redirect to="/list" />} exact key="first" />,

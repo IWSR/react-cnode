@@ -20,6 +20,21 @@ const config = webpackMerge(baseConfig, {
     new HTMLPlugin({
       template: '!!ejs-compiled-loader!' + path.join(__dirname, '../client/server.template.ejs'),
       filename: 'server.ejs'
+    }),
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'common', // 入口文件名
+      filename: 'common.[hash:4].js', // 打包后的文件名
+      minChunks: function (module, count) {
+        return module.resource &&
+          /\.js$/.test(module.resource) &&
+          module.resource.indexOf(
+            path.join(__dirname, '../node_modules')
+          ) === 0
+      }
+    }),
+    new webpack.optimize.CommonsChunkPlugin({
+      async: 'async-common',
+      minChunks: 3
     })
   ]
 });

@@ -6,6 +6,10 @@
   ],
   "plugins": [
     "transform-decorators-legacy",
-    "react-hot-loader/babel"
+    "react-hot-loader/babel",
+    "syntax-dynamic-import",
+    ["import-inspector", {
+      "serverSideRequirePath": true
+    }]
   ]
 }
