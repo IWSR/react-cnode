@@ -5,12 +5,14 @@ const session = require('express-session');
 const serverRender = require('./util/server-render');
 const fs = require('fs');
 const path = require('path');
+const compression = require('compression');
 
 const isDev = process.env.NODE_ENV === 'development';
 
 const app = express();
 
 app.use(bodyParser.json());
+
 app.use(bodyParser.urlencoded({
   extended: false
 }));
@@ -34,6 +36,9 @@ app.use('/api', require('./util/proxy'));
 if (!isDev) {
   const serverEntry = require('../dist/server-entry');
   const template = fs.readFileSync(path.join(__dirname, '../dist/server.ejs'), 'utf8');
+
+  // 开启gzip
+  app.use(compression());
 
   // 设置静态文件目录
   app.use('/public', express.static(path.join(__dirname, '../dist')));

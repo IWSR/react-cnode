@@ -1,5 +1,6 @@
 const path = require('path');
 const HTMLPlugin = require('html-webpack-plugin');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const webpack = require('webpack');
 const webpackMerge = require('webpack-merge');
 const baseConfig = require('./webpack.base');
@@ -35,6 +36,15 @@ const config = webpackMerge(baseConfig, {
     new webpack.optimize.CommonsChunkPlugin({
       async: 'async-common',
       minChunks: 3
+    }),
+    new UglifyJsPlugin({
+      uglifyOptions: {
+        compress: {
+          warnings: false
+        }
+      },
+      sourceMap: false,
+      parallel: true
     })
   ]
 });
